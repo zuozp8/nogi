@@ -27,3 +27,11 @@ void Visualiser::on_particlesAmountSlider_valueChanged(int value)
 {
 	ui->particlesAmountValueLabel->setText(QString("%0").arg(200 * (1 << value)));
 }
+
+void Visualiser::on_fogRadioButton_toggled(bool checked)
+{
+		ui->fogDensityLabel->setEnabled(checked);
+		ui->fogDensity->setEnabled(checked);
+		ui->fogRadiusLabel->setEnabled(checked);
+		ui->fogRadius->setEnabled(checked);
+}

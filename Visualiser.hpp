@@ -20,6 +20,8 @@ private slots:
 
 	void on_particlesAmountSlider_valueChanged(int value);
 
+	void on_fogRadioButton_toggled(bool checked);
+
 private:
 	Ui::Visualiser *ui;
 };
