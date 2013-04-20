@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>712</width>
-    <height>470</height>
+    <width>807</width>
+    <height>588</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,21 +32,7 @@
         <string>Ustawienia wizualizacji</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QLabel" name="speedLabel">
-          <property name="text">
-           <string>Szybkość wizualizacji</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="particlesAmountLabel">
-          <property name="text">
-           <string>Ilość czastek</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QLabel" name="particlesAmountValueLabel">
           <property name="text">
            <string/>
@@ -72,10 +58,13 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0" colspan="2">
+        <item row="4" column="0" colspan="2">
          <widget class="QSlider" name="particlesAmountSlider">
           <property name="maximum">
            <number>9</number>
+          </property>
+          <property name="pageStep">
+           <number>2</number>
           </property>
           <property name="sliderPosition">
            <number>4</number>
@@ -88,10 +77,27 @@
           </property>
          </widget>
         </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="particlesAmountLabel">
+          <property name="text">
+           <string>Ilość czastek</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="2">
+         <widget class="QPushButton" name="resetButton">
+          <property name="text">
+           <string>Resetuj cząstki</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="0" colspan="2">
          <widget class="QSlider" name="speedSlider">
           <property name="maximum">
-           <number>9</number>
+           <number>7</number>
+          </property>
+          <property name="pageStep">
+           <number>2</number>
           </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -104,10 +110,17 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="0" colspan="2">
-         <widget class="QPushButton" name="resetButton">
+        <item row="0" column="0">
+         <widget class="QLabel" name="speedLabel">
           <property name="text">
-           <string>Resetuj cząstki</string>
+           <string>Szybkość wizualizacji</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" colspan="2">
+         <widget class="QPushButton" name="stepButton">
+          <property name="text">
+           <string>Wykonaj krok</string>
           </property>
          </widget>
         </item>
@@ -115,22 +128,9 @@
       </widget>
      </item>
      <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
       <widget class="QGroupBox" name="groupBox_2">
        <property name="title">
-        <string>Ustaiwenia mapy</string>
+        <string>Ustawienia mapy</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
@@ -145,20 +145,26 @@
         </item>
         <item row="6" column="0" colspan="3">
          <widget class="QRadioButton" name="leg1RadioButton">
+          <property name="styleSheet">
+           <string notr="true">border: 0px solid red;</string>
+          </property>
           <property name="text">
            <string>Ustaw nogę 1</string>
           </property>
          </widget>
         </item>
-        <item row="7" column="0" colspan="2">
+        <item row="7" column="0" colspan="3">
          <widget class="QRadioButton" name="leg2RadioButton">
+          <property name="styleSheet">
+           <string notr="true">border: 0px solid magenta;</string>
+          </property>
           <property name="text">
            <string>Ustaw nogę 2</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1" colspan="2">
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="clearFogs">
           <property name="text">
            <string>Resetuj mgły</string>
           </property>
@@ -177,10 +183,13 @@
         <item row="1" column="2">
          <widget class="QSpinBox" name="fogRadius">
           <property name="minimum">
-           <number>5</number>
+           <number>15</number>
           </property>
           <property name="maximum">
            <number>100</number>
+          </property>
+          <property name="singleStep">
+           <number>2</number>
           </property>
          </widget>
         </item>
@@ -197,7 +206,7 @@
         <item row="5" column="2">
          <widget class="QDoubleSpinBox" name="fogDensity">
           <property name="minimum">
-           <double>0.050000000000000</double>
+           <double>0.200000000000000</double>
           </property>
           <property name="maximum">
            <double>1.000000000000000</double>
@@ -209,6 +218,92 @@
         </item>
        </layout>
       </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>Kierowanie robotem</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="1" column="0">
+         <widget class="QDial" name="direction1">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
+          <property name="singleStep">
+           <number>15</number>
+          </property>
+          <property name="pageStep">
+           <number>90</number>
+          </property>
+          <property name="value">
+           <number>180</number>
+          </property>
+          <property name="wrapping">
+           <bool>true</bool>
+          </property>
+          <property name="notchesVisible">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QDial" name="direction2">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="maximum">
+           <number>360</number>
+          </property>
+          <property name="singleStep">
+           <number>15</number>
+          </property>
+          <property name="pageStep">
+           <number>90</number>
+          </property>
+          <property name="value">
+           <number>180</number>
+          </property>
+          <property name="wrapping">
+           <bool>true</bool>
+          </property>
+          <property name="notchesVisible">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0" colspan="2">
+         <widget class="QCheckBox" name="controlDirections">
+          <property name="text">
+           <string>Ustalaj kierunek</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="aboutButton">
+       <property name="text">
+        <string>O programie</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

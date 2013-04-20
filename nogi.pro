@@ -14,9 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         Visualiser.cpp \
-    VisualiserCanvas.cpp
+    VisualiserCanvas.cpp \
+    World.cpp \
+    Robot.cpp
 
 HEADERS  += Visualiser.hpp \
-    VisualiserCanvas.hpp
+    VisualiserCanvas.hpp \
+    World.hpp \
+    Robot.hpp
 
 FORMS    += Visualiser.ui

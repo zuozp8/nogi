@@ -1,16 +1,24 @@
 #include "Visualiser.hpp"
-#include "ui_Visualiser.h"
 
 #include <QDebug>
+#include <QMessageBox>
 
-Visualiser::Visualiser(QWidget *parent) :
-	QWidget(parent),
+Visualiser::Visualiser() :
 	ui(new Ui::Visualiser)
 {
 	ui->setupUi(this);
 
+	QPalette *p = new QPalette();
+	p->setColor(QPalette::Foreground, LEG1COLOR);
+	ui->leg1RadioButton->setPalette(*p);
+
+	p = new QPalette();
+	p->setColor(QPalette::Foreground, LEG2COLOR);
+	ui->leg2RadioButton->setPalette(*p);
+
 	on_speedSlider_valueChanged(ui->speedSlider->value());
 	on_particlesAmountSlider_valueChanged(ui->particlesAmountSlider->value());
+	timerId = 0;
 }
 
 Visualiser::~Visualiser()
@@ -18,9 +26,23 @@ Visualiser::~Visualiser()
 	delete ui;
 }
 
+void Visualiser::timerEvent(QTimerEvent *)
+{
+	//ROBOT->step();
+	//update();
+}
+
 void Visualiser::on_speedSlider_valueChanged(int value)
 {
 	ui->speedValueLabel->setText(QString("%0 FPS").arg(value ? 1 << (value-1) : 0));
+	ui->stepButton->setEnabled(value == 0);
+	if (timerId>0) {
+		killTimer(timerId);
+		timerId = 0;
+	}
+	if (value) {
+		timerId = startTimer(1000>>(value-1));
+	}
 }
 
 void Visualiser::on_particlesAmountSlider_valueChanged(int value)
@@ -30,8 +52,39 @@ void Visualiser::on_particlesAmountSlider_valueChanged(int value)
 
 void Visualiser::on_fogRadioButton_toggled(bool checked)
 {
-		ui->fogDensityLabel->setEnabled(checked);
-		ui->fogDensity->setEnabled(checked);
-		ui->fogRadiusLabel->setEnabled(checked);
-		ui->fogRadius->setEnabled(checked);
+	ui->fogDensityLabel->setEnabled(checked);
+	ui->fogDensity->setEnabled(checked);
+	ui->fogRadiusLabel->setEnabled(checked);
+	ui->fogRadius->setEnabled(checked);
+}
+
+void Visualiser::on_controlDirections_toggled(bool checked)
+{
+	ui->direction1->setEnabled(checked);
+	ui->direction2->setEnabled(checked);
+}
+
+void Visualiser::on_aboutButton_clicked()
+{
+	QMessageBox::information(this, "O programie",
+													 "Foo foo tutaj coś napiszemy\n"
+													 "Wykonanie: Konrad Baumgart i Kalina Jasinska");
+}
+
+
+Visualiser *Visualiser::getInstance()
+{
+	static Visualiser* instance = new Visualiser();
+	return instance;
+}
+
+void Visualiser::on_clearFogs_clicked()
+{
+	WORLD->clearFogs();
+	ui->canvas->update();
+}
+
+void Visualiser::on_stepButton_clicked()
+{
+	timerEvent(NULL);
 }
