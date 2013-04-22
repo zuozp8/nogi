@@ -88,7 +88,13 @@ void VisualiserCanvas::mouseMoveEvent(QMouseEvent *e)
 		return;
 	}
 	mouseIn = true;
-	mousePosition = e->posF()/scalingFactor;
+	mousePosition =
+	#if QT_VERSION >= 0x050000
+			e->localPos();
+	#else
+			e->posF();
+	#endif
+	mousePosition /= scalingFactor;
 	update();
 }
 
