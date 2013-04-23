@@ -5,6 +5,7 @@
 #include <QPoint>
 #include <QPair>
 #include <QVector>
+#include <qmath.h>
 
 #define WORLD (World::getInstance())
 
@@ -19,7 +20,7 @@ public:
 	struct Fog{
 		QPointF position;
 		int r;
-		qreal density;
+        qreal density;//<0,1>??
 	};
 	QVector<Fog> fogs();
 
