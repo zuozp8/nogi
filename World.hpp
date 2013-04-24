@@ -30,6 +30,9 @@ public:
 
 	qreal unbiasedGaugeForLegs(QPointF l1, QPointF l2);
 
+	bool isInFog(QPointF leg, Fog f);
+	bool isInInterval(qreal p, qreal a, qreal b);
+	qreal updateVisibility(qreal actual, qreal density);
 signals:
 	void robotGaugeReady(qreal);
 	
