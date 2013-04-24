@@ -20,7 +20,7 @@ public:
 	struct Fog{
 		QPointF position;
 		int r;
-        qreal density;//<0,1>??
+		qreal density;//<0,1>??
 	};
 	QVector<Fog> fogs();
 

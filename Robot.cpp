@@ -7,4 +7,5 @@ Robot::Robot(QObject *parent) :
 
 void Robot::gaugeReaded(qreal)
 {
+	//TODO
 }
