@@ -9,6 +9,7 @@ class Robot : public QObject
 	Q_OBJECT
 public:
 	explicit Robot(QObject *parent = 0);
+	void step();
 	
 signals:
 	void moves(QPointF vector1, QPointF vector2);

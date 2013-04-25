@@ -27,8 +27,10 @@ protected:
 signals:
 	
 public slots:
+	void setLastGauge(qreal);
 
 private:
+	qreal lastGauge;
 	bool mouseIn;
 	QPointF mousePosition;
 };

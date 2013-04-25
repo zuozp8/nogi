@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "World.hpp"
 #include "ui_Visualiser.h"
+#include "Robot.hpp"
 
 #define VISUALISER (Visualiser::getInstance())
 
@@ -41,6 +42,7 @@ private slots:
 private:
 	explicit Visualiser();
 	int timerId;
+	Robot* robot;
 };
 
 #endif // VISUALISER_HPP

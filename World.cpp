@@ -8,6 +8,11 @@ World::World(QObject *parent) :
 	leg2Position = QPointF(500, 200);
 }
 
+qreal World::biasedGaugeForRealLegs()
+{
+	return unbiasedGaugeForLegs(leg1Position, leg2Position);
+}
+
 QPoint World::dimenstions()
 {
 	return QPoint(600, 400);
@@ -41,39 +46,33 @@ void World::addFog(Fog f)
 }
 
 void World::robotMoves(QPointF vector, QPointF vector2)
-{   //robotMoves - robot wywoła tę funkcję jak się ruszy
-	//z 2 wektorami
-	//oznaczającymi co robi
-	//a świat musi go poślizgnąć
-	//Add bias
+{
+	// Add bias
+	leg1Position += vector;
+	leg2Position += vector;
+	qreal biasedGauge = biasedGaugeForRealLegs();
+	emit robotGaugeReady(biasedGauge);
 }
-
 
 QVector<World::Fog> World::fogs()
 {
 	return fogArray;
 }
 
-
 bool World::isInInterval(qreal p, qreal a, qreal b){
-	if((p <= a && p >= b) || (p >= a && p <= b)){
-		return 1;
-	}
-	return 0;
+	return (p <= a && p >= b) || (p >= a && p <= b);
 }
 
 bool World::isInFog(QPointF leg, Fog f){
-	qreal r = f.r;
+	qreal r2 = f.r*f.r;
 	qreal xf = qreal(f.position.x());
 	qreal yf = qreal(f.position.y());
 	qreal xl = qreal(leg.x());
 	qreal yl = qreal(leg.y());
 
-	qreal dist = qSqrt(pow(xf - xl, 2) + pow(yf - yl, 2));
-	if(dist <= r){
-		return 1;
-	}
-	return 0;
+	qreal dist = pow(xf - xl, 2) + pow(yf - yl, 2);
+
+	return dist <= r2;
 }
 
 qreal World::updateVisibility(qreal actual, qreal density){
@@ -81,6 +80,7 @@ qreal World::updateVisibility(qreal actual, qreal density){
 		qWarning()<<1.0 - density;
 		return 1.0 - density;
 	}
+	return actual;
 }
 qreal World::unbiasedGaugeForLegs(QPointF l1, QPointF l2)
 {
@@ -91,8 +91,7 @@ qreal World::unbiasedGaugeForLegs(QPointF l1, QPointF l2)
 
 	qreal minVisibility = 1.0;
 
-	for(int i = 0; i<fogArray.count(); i++){
-		Fog f = fogArray.at(i);
+	foreach(Fog f, fogArray) {
 		qreal xf = f.position.x();
 		qreal yf = f.position.y();
 

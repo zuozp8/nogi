@@ -15,6 +15,7 @@ VisualiserCanvas::VisualiserCanvas(QWidget *parent) :
 	setSizePolicy(sp);
 	mouseIn = false;
 	setMouseTracking(true);
+	lastGauge = 1.;
 }
 
 int VisualiserCanvas::heightForWidth(int w) const
@@ -118,4 +119,9 @@ void VisualiserCanvas::mouseReleaseEvent(QMouseEvent *)
 		}
 	}
 	update();
+}
+
+void VisualiserCanvas::setLastGauge(qreal gauge)
+{
+	lastGauge = gauge;
 }

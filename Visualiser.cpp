@@ -8,6 +8,12 @@ Visualiser::Visualiser() :
 {
 	ui->setupUi(this);
 
+	connect(WORLD, SIGNAL(robotGaugeReady(qreal)), ui->canvas, SLOT(setLastGauge(qreal)));
+
+	robot = new Robot();
+	connect(WORLD, SIGNAL(robotGaugeReady(qreal)), robot, SLOT(gaugeReaded(qreal)));
+	connect(robot, SIGNAL(moves(QPointF,QPointF)), WORLD, SLOT(robotMoves(QPointF,QPointF)));
+
 	QPalette *p = new QPalette();
 	p->setColor(QPalette::Foreground, LEG1COLOR);
 	ui->leg1RadioButton->setPalette(*p);
@@ -28,8 +34,8 @@ Visualiser::~Visualiser()
 
 void Visualiser::timerEvent(QTimerEvent *)
 {
-	//ROBOT->step();
-	//update();
+	robot->step();
+	ui->canvas->update();
 }
 
 void Visualiser::on_speedSlider_valueChanged(int value)
