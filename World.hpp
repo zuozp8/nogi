@@ -6,8 +6,11 @@
 #include <QPair>
 #include <QVector>
 #include <qmath.h>
+#include <random>
 
 #define WORLD (World::getInstance())
+#define STDDEV (1.0)
+
 
 class World : public QObject
 {
@@ -16,6 +19,9 @@ class World : public QObject
 public:
 	static World* getInstance();
 	QPoint dimenstions();
+
+	std::default_random_engine generator;
+	std::normal_distribution<double> distribution;
 
 	struct Fog{
 		QPointF position;
@@ -29,7 +35,8 @@ public:
 	void setLeg2Posision(QPointF);
 
 	qreal unbiasedGaugeForLegs(QPointF l1, QPointF l2);
-
+	QPointF maxInWorldSize(QPointF legPos, QPointF d);
+	qreal findFittingPosition(qreal max, qreal pos, qreal delta);
 signals:
 	void robotGaugeReady(qreal);
 	
