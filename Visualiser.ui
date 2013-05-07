@@ -216,6 +216,13 @@
           </property>
          </widget>
         </item>
+        <item row="8" column="0" colspan="3">
+         <widget class="QRadioButton" name="voidRadioButton">
+          <property name="text">
+           <string>Nic nie rób</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </item>
@@ -225,11 +232,8 @@
         <string>Kierowanie robotem</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="1" column="0">
+        <item row="0" column="0">
          <widget class="QDial" name="direction1">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="maximum">
            <number>360</number>
           </property>
@@ -250,11 +254,8 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="0" column="1">
          <widget class="QDial" name="direction2">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
           <property name="maximum">
            <number>360</number>
           </property>
@@ -272,13 +273,6 @@
           </property>
           <property name="notchesVisible">
            <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" colspan="2">
-         <widget class="QCheckBox" name="controlDirections">
-          <property name="text">
-           <string>Ustalaj kierunek</string>
           </property>
          </widget>
         </item>

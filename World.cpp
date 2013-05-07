@@ -5,11 +5,11 @@
 World::World(QObject *parent) :
 	QObject(parent)
 {
-	leg1Position = QPointF(100, 300);
-	leg2Position = QPointF(500, 200);
+	leg1Position = QPointF(50, 150);
+	leg2Position = QPointF(250, 100);
 
-	distributionForMoves = std::normal_distribution<double>(0,.2);
-	distributionForGauge = std::normal_distribution<double>(0,.05);
+	distributionForMoves = std::normal_distribution<double>(0,.15);
+	distributionForGauge = std::normal_distribution<double>(0,.03);
 }
 
 qreal World::biasedGaugeForRealLegs()
@@ -22,7 +22,7 @@ qreal World::biasedGaugeForRealLegs()
 
 QPointF World::dimenstions()
 {
-	return QPointF(600., 400.);
+	return QPointF(300., 200.);
 }
 
 QPair<QPointF, QPointF> World::robotPosition()

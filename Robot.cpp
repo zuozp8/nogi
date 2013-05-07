@@ -10,17 +10,10 @@ Robot::Robot(QObject *parent) :
 
 void Robot::step()
 {
-	int val1, val2;
+	int val1 = VISUALISER->ui->direction1->value();
+	int val2 = VISUALISER->ui->direction2->value();
 
-	if(VISUALISER->ui->controlDirections->isChecked()){
-		val1 = VISUALISER->ui->direction1->value();
-		val2 = VISUALISER->ui->direction2->value();
-	}else{
-		val1 = 180;
-		val2 = 180;
-	}
-
-	qreal pi = 3.1415;
+	qreal pi = 3.1415926536;
 
 	qreal alfa1 = 2.0*pi*(qreal(val1)/360.0);
 	qreal alfa2 = 2.0*pi*(qreal(val2)/360.0);

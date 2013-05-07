@@ -71,16 +71,14 @@ void Visualiser::on_fogRadioButton_toggled(bool checked)
 	ui->fogRadius->setEnabled(checked);
 }
 
-void Visualiser::on_controlDirections_toggled(bool checked)
-{
-	ui->direction1->setEnabled(checked);
-	ui->direction2->setEnabled(checked);
-}
-
 void Visualiser::on_aboutButton_clicked()
 {
 	QMessageBox::information(this, "O programie",
-													 "Foo foo tutaj coś napiszemy\n"
+													 "Program prezentuje działanie filtra cząsteczkowego.\n\n"
+													 "W środowisku znajduje się robot, który ma dwie \"nogi\". "
+													 "Nogi mają sensor wskazujący jak bardzo się widzą. "
+													 "W środowisku dodatkowo należy ustawić mgły o różnych gęstościach, na podstawie ich położenia "
+													 "i wskazania czujnika robot postara się określić swoją pozycję.\n\n"
 													 "Wykonanie: Konrad Baumgart i Kalina Jasinska");
 }
 

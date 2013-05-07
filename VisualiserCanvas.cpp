@@ -35,31 +35,6 @@ void VisualiserCanvas::paintEvent(QPaintEvent *)
 	p.setBrush(Qt::SolidPattern);
 	p.drawRect(0, 0, WORLD->dimenstions().x(), WORLD->dimenstions().y());
 
-	//FOGS
-	p.setBrush(QBrush(Qt::white, Qt::Dense2Pattern));
-	p.setPen(QColor(Qt::white));
-	foreach (World::Fog fog, WORLD->fogs()) {
-		p.setOpacity(fog.density);
-		p.drawEllipse(fog.position, fog.r, fog.r);
-	}
-
-	//MOUSE
-	if (mouseIn) {
-		if (VISUALISER->ui->fogRadioButton->isChecked()) {
-			p.setBrush(QBrush(Qt::white, Qt::Dense3Pattern));
-			p.setPen(QColor(Qt::white));
-			p.setOpacity(VISUALISER->ui->fogDensity->value());
-			int radius = VISUALISER->ui->fogRadius->value();
-			p.drawEllipse(mousePosition, radius, radius);
-		} else {
-			p.setOpacity(0.6);
-			p.setBrush(QBrush(
-									 VISUALISER->ui->leg1RadioButton->isChecked() ? LEG1COLOR : LEG2COLOR,
-									 Qt::Dense3Pattern));
-			p.drawEllipse(mousePosition, 8, 8);
-		}
-		p.setOpacity(1);
-	}
 
 	QPair<QPointF, QPointF> robotPosition = WORLD->robotPosition();
 	//GAUGE
@@ -86,6 +61,36 @@ void VisualiserCanvas::paintEvent(QPaintEvent *)
 		p.setPen(QColor(LEG2COLOR));
 		p.drawPoint(particle.leg2);
 	}
+
+	//FOGS
+	foreach (World::Fog fog, WORLD->fogs()) {
+		p.setBrush(Qt::NoBrush);
+		p.setPen(QColor(Qt::white));
+		p.setOpacity((1+fog.density)/2);
+		p.drawEllipse(fog.position, fog.r, fog.r);
+		p.setBrush(QBrush(Qt::white, Qt::Dense2Pattern));
+		p.setPen(Qt::NoPen);
+		p.setOpacity(fog.density*0.6 + 0.1);
+		p.drawEllipse(fog.position, fog.r, fog.r);
+	}
+
+	//MOUSE
+	if (mouseIn) {
+		if (VISUALISER->ui->fogRadioButton->isChecked()) {
+			p.setBrush(QBrush(Qt::white, Qt::Dense3Pattern));
+			p.setPen(QColor(Qt::white));
+			p.setOpacity(VISUALISER->ui->fogDensity->value());
+			int radius = VISUALISER->ui->fogRadius->value();
+			p.drawEllipse(mousePosition, radius, radius);
+		} else {
+			p.setOpacity(0.6);
+			p.setBrush(QBrush(
+									 VISUALISER->ui->leg1RadioButton->isChecked() ? LEG1COLOR : LEG2COLOR,
+									 Qt::Dense3Pattern));
+			p.drawEllipse(mousePosition, 8, 8);
+		}
+		p.setOpacity(1);
+	}
 }
 
 void VisualiserCanvas::resizeEvent(QResizeEvent *e)
@@ -99,7 +104,8 @@ void VisualiserCanvas::mouseMoveEvent(QMouseEvent *e)
 	qreal scalingFactor = qMin(width()/qreal(WORLD->dimenstions().x()),
 														 height()/qreal(WORLD->dimenstions().y()));
 	if (e->pos().x() > WORLD->dimenstions().x() * scalingFactor ||
-			e->pos().y() > WORLD->dimenstions().y() * scalingFactor ) {
+			e->pos().y() > WORLD->dimenstions().y() * scalingFactor ||
+			VISUALISER->ui->voidRadioButton->isChecked()) {
 		if (mouseIn)
 			update();
 		mouseIn = false;

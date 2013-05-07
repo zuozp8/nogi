@@ -34,8 +34,6 @@ private slots:
 
 	void on_fogRadioButton_toggled(bool checked);
 
-	void on_controlDirections_toggled(bool checked);
-
 	void on_aboutButton_clicked();
 
 	void on_clearFogs_clicked();

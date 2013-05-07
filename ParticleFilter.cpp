@@ -56,7 +56,9 @@ void ParticleFilter::robotMoves(QPointF vector1, QPointF vector2)
 	qreal b = 0;
 	int index = qrand()%oldParticles.size();
 
-	for (int i = 0; i<VISUALISER->particlesAmount() - (VISUALISER->particlesAmount() >> 6); i++) {
+	int particlesToCreate = VISUALISER->particlesAmount() * 0.998;
+
+	for (int i = 0; i<particlesToCreate; i++) {
 		b += distribution(generator);
 		while (oldParticles[index].propability < b) {
 			b -= oldParticles[index].propability;
@@ -65,13 +67,13 @@ void ParticleFilter::robotMoves(QPointF vector1, QPointF vector2)
 		particles.append(oldParticles[index]);
 	}
 
-	//GENERATE RANDOM
+	//GENERATE RANDOM PARTICLES
 	initializeParticles();
 
 	for (int i=0; i<particles.size(); i++) {
 		Particle& p = particles[i];
-		p.leg1 += vector1 + 1.5*WORLD->getGlideBiasVector();
-		p.leg2 += vector2 + 1.5*WORLD->getGlideBiasVector();
+		p.leg1 += vector1 + 2.5*WORLD->getGlideBiasVector();
+		p.leg2 += vector2 + 2.5*WORLD->getGlideBiasVector();
 		WORLD->assureLegInField(p.leg1);
 		WORLD->assureLegInField(p.leg2);
 	}
@@ -86,6 +88,6 @@ void ParticleFilter::initializeParticles()
 		particles.append({
 											 QPointF(distributionX(generator), distributionY(generator)),
 											 QPointF(distributionX(generator), distributionY(generator)),
-											 1.});
+											 .7});
 	}
 }
