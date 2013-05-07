@@ -18,11 +18,13 @@ SOURCES += main.cpp\
         Visualiser.cpp \
     VisualiserCanvas.cpp \
     World.cpp \
-    Robot.cpp
+    Robot.cpp \
+    ParticleFilter.cpp
 
 HEADERS  += Visualiser.hpp \
     VisualiserCanvas.hpp \
     World.hpp \
-    Robot.hpp
+    Robot.hpp \
+    ParticleFilter.hpp
 
 FORMS    += Visualiser.ui

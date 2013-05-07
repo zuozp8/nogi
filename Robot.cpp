@@ -1,14 +1,11 @@
 #include "Robot.hpp"
 #include "Visualiser.hpp"
 #include <QDebug>
-#include <QTime>
 #include <QDebug>
 
 Robot::Robot(QObject *parent) :
 	QObject(parent)
 {
-	QTime time = QTime::currentTime();
-	qsrand((uint)time.msec());
 }
 
 void Robot::step()

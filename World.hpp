@@ -5,7 +5,6 @@
 #include <QPoint>
 #include <QPair>
 #include <QVector>
-#include <qmath.h>
 #include <random>
 
 #define WORLD (World::getInstance())
@@ -31,6 +30,10 @@ public:
 	void setLeg2Posision(QPointF);
 
 	qreal unbiasedGaugeForLegs(QPointF l1, QPointF l2);
+	void assureLegInField(QPointF &leg);
+	const std::normal_distribution<qreal> getDistributionForGauge() const;
+
+	QPointF getGlideBiasVector();
 signals:
 	void robotGaugeReady(qreal);
 	

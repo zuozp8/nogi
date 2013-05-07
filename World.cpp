@@ -1,5 +1,6 @@
 #include "World.hpp"
 #include <QDebug>
+#include <qmath.h>
 
 World::World(QObject *parent) :
 	QObject(parent)
@@ -7,8 +8,8 @@ World::World(QObject *parent) :
 	leg1Position = QPointF(100, 300);
 	leg2Position = QPointF(500, 200);
 
-	distributionForMoves = std::normal_distribution<double>(0,1);
-	distributionForGauge = std::normal_distribution<double>(0,0.2);
+	distributionForMoves = std::normal_distribution<double>(0,.2);
+	distributionForGauge = std::normal_distribution<double>(0,.05);
 }
 
 qreal World::biasedGaugeForRealLegs()
@@ -49,17 +50,24 @@ void World::addFog(Fog f)
 	fogArray.append(f);
 }
 
+void World::assureLegInField(QPointF& leg) {
+	leg.setX(qMin(qMax(leg.x(), 0.), dimenstions().x()));
+	leg.setY(qMin(qMax(leg.y(), 0.), dimenstions().y()));
+}
+
 void World::assureLegsInField(){
-	leg1Position.setX(qMin(qMax(leg1Position.x(), 0.), dimenstions().x()));
-	leg1Position.setY(qMin(qMax(leg1Position.y(), 0.), dimenstions().y()));
-	leg2Position.setX(qMin(qMax(leg2Position.x(), 0.), dimenstions().x()));
-	leg2Position.setY(qMin(qMax(leg2Position.y(), 0.), dimenstions().y()));
+	assureLegInField(leg1Position);
+	assureLegInField(leg2Position);
+}
+
+QPointF World::getGlideBiasVector() {
+	return QPointF(distributionForMoves(generator), distributionForMoves(generator));
 }
 
 void World::robotMoves(QPointF vector, QPointF vector2)
 {
-	vector += QPointF(distributionForMoves(generator), distributionForMoves(generator));
-	vector2 += QPointF(distributionForMoves(generator), distributionForMoves(generator));
+	vector += getGlideBiasVector();
+	vector2 += getGlideBiasVector();
 
 	leg1Position  += vector;
 	leg2Position  += vector2;
@@ -136,4 +144,9 @@ World *World::getInstance()
 {
 	static World* instance = new World();
 	return instance;
+}
+
+const std::normal_distribution<qreal> World::getDistributionForGauge() const
+{
+	return distributionForGauge;
 }

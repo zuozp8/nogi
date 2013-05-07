@@ -72,11 +72,20 @@ void VisualiserCanvas::paintEvent(QPaintEvent *)
 
 	//LEGS
 	p.setPen(QColor(Qt::white));
-	p.setBrush(QBrush(LEG1COLOR));
+	p.setBrush(QBrush(QColor(LEG1COLOR).darker(120)));
 	p.drawEllipse(robotPosition.first, 8, 8);
 
-	p.setBrush(QBrush(LEG2COLOR));
+	p.setBrush(QBrush(QColor(LEG2COLOR).darker(120)));
 	p.drawEllipse(robotPosition.second, 8, 8);
+
+	//PARTICLES
+	foreach (ParticleFilter::Particle particle, VISUALISER->getParticles()) {
+		p.setOpacity(particle.propability);
+		p.setPen(QColor(LEG1COLOR));
+		p.drawPoint(particle.leg1);
+		p.setPen(QColor(LEG2COLOR));
+		p.drawPoint(particle.leg2);
+	}
 }
 
 void VisualiserCanvas::resizeEvent(QResizeEvent *e)

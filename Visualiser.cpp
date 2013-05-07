@@ -10,9 +10,13 @@ Visualiser::Visualiser() :
 
 	connect(WORLD, SIGNAL(robotGaugeReady(qreal)), ui->canvas, SLOT(setLastGauge(qreal)));
 
-	robot = new Robot();
+	robot = new Robot(this);
 	connect(WORLD, SIGNAL(robotGaugeReady(qreal)), robot, SLOT(gaugeReaded(qreal)));
 	connect(robot, SIGNAL(moves(QPointF,QPointF)), WORLD, SLOT(robotMoves(QPointF,QPointF)));
+
+	particleFilter = new ParticleFilter(this);
+	connect(WORLD, SIGNAL(robotGaugeReady(qreal)), particleFilter, SLOT(gaugeReaded(qreal)));
+	connect(robot, SIGNAL(moves(QPointF,QPointF)), particleFilter, SLOT(robotMoves(QPointF,QPointF)));
 
 	QPalette *p = new QPalette();
 	p->setColor(QPalette::Foreground, LEG1COLOR);
@@ -23,7 +27,7 @@ Visualiser::Visualiser() :
 	ui->leg2RadioButton->setPalette(*p);
 
 	on_speedSlider_valueChanged(ui->speedSlider->value());
-	on_particlesAmountSlider_valueChanged(ui->particlesAmountSlider->value());
+	on_particlesAmountSlider_valueChanged();
 	timerId = 0;
 }
 
@@ -50,10 +54,13 @@ void Visualiser::on_speedSlider_valueChanged(int value)
 		timerId = startTimer(1000>>(value-1));
 	}
 }
+int Visualiser::particlesAmount() const{
+	return 2000 * (1 << ui->particlesAmountSlider->value());
+}
 
-void Visualiser::on_particlesAmountSlider_valueChanged(int value)
+void Visualiser::on_particlesAmountSlider_valueChanged()
 {
-	ui->particlesAmountValueLabel->setText(QString("%0").arg(200 * (1 << value)));
+	ui->particlesAmountValueLabel->setText(QString("%0").arg(particlesAmount()));
 }
 
 void Visualiser::on_fogRadioButton_toggled(bool checked)
@@ -93,4 +100,15 @@ void Visualiser::on_clearFogs_clicked()
 void Visualiser::on_stepButton_clicked()
 {
 	timerEvent(NULL);
+}
+
+QVector<ParticleFilter::Particle> Visualiser::getParticles()
+{
+	return particleFilter->getParticles();
+}
+
+void Visualiser::on_resetButton_clicked()
+{
+	particleFilter->clear();
+	ui->canvas->update();
 }
