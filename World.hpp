@@ -9,7 +9,6 @@
 #include <random>
 
 #define WORLD (World::getInstance())
-#define STDDEV (1.0)
 
 
 class World : public QObject
@@ -18,10 +17,7 @@ class World : public QObject
 
 public:
 	static World* getInstance();
-	QPoint dimenstions();
-
-	std::default_random_engine generator;
-	std::normal_distribution<double> distribution;
+	QPointF dimenstions();
 
 	struct Fog{
 		QPointF position;
@@ -35,8 +31,6 @@ public:
 	void setLeg2Posision(QPointF);
 
 	qreal unbiasedGaugeForLegs(QPointF l1, QPointF l2);
-	QPointF maxInWorldSize(QPointF legPos, QPointF d);
-	qreal findFittingPosition(qreal max, qreal pos, qreal delta);
 signals:
 	void robotGaugeReady(qreal);
 	
@@ -54,9 +48,16 @@ private:
 
 	qreal biasedGaugeForRealLegs();
 
+	qreal findFittingPosition(qreal max, qreal pos, qreal delta);
+	void assureLegsInField();
+
 	bool isInFog(QPointF leg, Fog f);
 	bool isInInterval(qreal p, qreal a, qreal b);
 	qreal updateVisibility(qreal actual, qreal density);
+
+	std::default_random_engine generator;
+	std::normal_distribution<qreal> distributionForMoves;
+	std::normal_distribution<qreal> distributionForGauge;
 };
 
 #endif // WORLD_HPP

@@ -29,7 +29,7 @@ void VisualiserCanvas::paintEvent(QPaintEvent *)
 	qreal scalingFactor = qMin(width()/qreal(WORLD->dimenstions().x()),
 														 height()/qreal(WORLD->dimenstions().y()));
 	p.scale(scalingFactor, scalingFactor);
-	p.setClipRect(QRect(QPoint(), WORLD->dimenstions()));
+	p.setClipRect(QRectF(QPointF(), WORLD->dimenstions()));
 
 	//BACKGROUND
 	p.setBrush(Qt::SolidPattern);
@@ -61,8 +61,16 @@ void VisualiserCanvas::paintEvent(QPaintEvent *)
 		p.setOpacity(1);
 	}
 
-	//LEGS
 	QPair<QPointF, QPointF> robotPosition = WORLD->robotPosition();
+	//GAUGE
+	QPen gaugePen(QColor(Qt::green));
+	gaugePen.setWidthF(lastGauge*5);
+	p.setPen(gaugePen);
+	p.setOpacity((lastGauge+0.3)/1.3);
+	p.drawLine(robotPosition.first, robotPosition.second);
+	p.setOpacity(1);
+
+	//LEGS
 	p.setPen(QColor(Qt::white));
 	p.setBrush(QBrush(LEG1COLOR));
 	p.drawEllipse(robotPosition.first, 8, 8);

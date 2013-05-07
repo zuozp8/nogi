@@ -7,17 +7,21 @@ World::World(QObject *parent) :
 	leg1Position = QPointF(100, 300);
 	leg2Position = QPointF(500, 200);
 
-	distribution = std::normal_distribution<double>(0,STDDEV);
+	distributionForMoves = std::normal_distribution<double>(0,1);
+	distributionForGauge = std::normal_distribution<double>(0,0.2);
 }
 
 qreal World::biasedGaugeForRealLegs()
 {
-	return unbiasedGaugeForLegs(leg1Position, leg2Position);
+	qreal gauge = unbiasedGaugeForLegs(leg1Position, leg2Position);
+	gauge += distributionForGauge(generator);
+	gauge = qMin(qMax(gauge, 0.), 1.);
+	return gauge;
 }
 
-QPoint World::dimenstions()
+QPointF World::dimenstions()
 {
-	return QPoint(600, 400);
+	return QPointF(600., 400.);
 }
 
 QPair<QPointF, QPointF> World::robotPosition()
@@ -43,39 +47,24 @@ void World::clearFogs()
 void World::addFog(Fog f)
 {
 	fogArray.append(f);
-	//unbiasedGaugeForLegs(leg1Position, leg2Position);
-	//test odleglosci
 }
 
-qreal World::findFittingPosition(qreal max, qreal pos , qreal delta){
-	if(pos + delta < 0)
-		return 0;
-	if(pos + delta > max)
-		return max;
-	return pos + delta;
-}
-
-QPointF World::maxInWorldSize(QPointF legPos, QPointF  d){
-	legPos.setX(findFittingPosition(dimenstions().x(), legPos.x() , d.x()));
-	legPos.setY(findFittingPosition(dimenstions().y(), legPos.y() , d.y()));
-
-	return legPos;
+void World::assureLegsInField(){
+	leg1Position.setX(qMin(qMax(leg1Position.x(), 0.), dimenstions().x()));
+	leg1Position.setY(qMin(qMax(leg1Position.y(), 0.), dimenstions().y()));
+	leg2Position.setX(qMin(qMax(leg2Position.x(), 0.), dimenstions().x()));
+	leg2Position.setY(qMin(qMax(leg2Position.y(), 0.), dimenstions().y()));
 }
 
 void World::robotMoves(QPointF vector, QPointF vector2)
 {
-	// Add bias
+	vector += QPointF(distributionForMoves(generator), distributionForMoves(generator));
+	vector2 += QPointF(distributionForMoves(generator), distributionForMoves(generator));
 
-	qreal dx1 = qreal(distribution(generator));
-	qreal dy1 = qreal(distribution(generator));
-	qreal dx2 = qreal(distribution(generator));
-	qreal dy2 = qreal(distribution(generator));
+	leg1Position  += vector;
+	leg2Position  += vector2;
 
-	QPointF d1 = QPointF(dx1, dy1) + vector;
-	QPointF d2 = QPointF(dx2, dy2) + vector2;
-
-	leg1Position  = maxInWorldSize(leg1Position,d1);
-	leg2Position  = maxInWorldSize(leg2Position,d2);
+	assureLegsInField();
 
 	qreal biasedGauge = biasedGaugeForRealLegs();
 	emit robotGaugeReady(biasedGauge);
@@ -103,11 +92,7 @@ bool World::isInFog(QPointF leg, Fog f){
 }
 
 qreal World::updateVisibility(qreal actual, qreal density){
-	if(1.0 - density < actual){
-		qWarning()<<1.0 - density;
-		return 1.0 - density;
-	}
-	return actual;
+	return actual * (1-density);
 }
 qreal World::unbiasedGaugeForLegs(QPointF l1, QPointF l2)
 {
@@ -116,7 +101,7 @@ qreal World::unbiasedGaugeForLegs(QPointF l1, QPointF l2)
 	qreal B = l1.x() - l2.x();
 	qreal C = -A*l1.x() - B*l1.y();
 
-	qreal minVisibility = 1.0;
+	qreal visibility = 1.0;
 
 	foreach(Fog f, fogArray) {
 		qreal xf = f.position.x();
@@ -124,7 +109,7 @@ qreal World::unbiasedGaugeForLegs(QPointF l1, QPointF l2)
 
 		// czy ktorakolwiek noga jest we mgle
 		if(isInFog(l1, f) || isInFog(l2,f)){
-			minVisibility = updateVisibility(minVisibility, f.density);
+			visibility = updateVisibility(visibility, f.density);
 		}else{
 			// odleglosc srodka mgly od prostej
 			qreal dist = qAbs(A*xf + B*yf + C)/qSqrt(A*A + B*B);
@@ -139,12 +124,12 @@ qreal World::unbiasedGaugeForLegs(QPointF l1, QPointF l2)
 				qreal xd = (-C - B*yd)/A;
 				// czy punkt zawiera sie pomiedzy nogami
 				if(isInInterval(xd, l1.x(), l2.x()) && isInInterval(yd, l1.y(), l2.y())){
-					minVisibility = updateVisibility(minVisibility, f.density);
+					visibility = updateVisibility(visibility, f.density);
 				}
 			}
 		}
 	}
-	return minVisibility;
+	return visibility;
 }
 
 World *World::getInstance()
