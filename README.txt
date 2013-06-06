@@ -6,3 +6,5 @@ Instrukcja kompilacji:
 2) W konsoli:
 	qmake
 	make
+
+Po uruchomieniu programu kliknij przycisk "O programie", by poznać działanie programu
