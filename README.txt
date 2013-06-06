@@ -4,6 +4,5 @@ Instrukcja kompilacji:
 	Otwórz plik .pro w środowisku i kliknij zieloną strzałkę po lewej
 
 2) W konsoli:
-	qmake -project
 	qmake
 	make
